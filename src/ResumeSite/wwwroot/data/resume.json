@@ -1,0 +1,57 @@
+{
+  "profile": {
+    "name": "Your Full Name",
+    "title": "Software Developer",
+    "summary": "One or two sentences about what you do and what you're good at.",
+    "location": "City, Country",
+    "photo": null,
+    "photoAlt": "Portrait of Your Full Name",
+    "cvUrl": null
+  },
+  "contacts": [
+    { "label": "Email", "url": "mailto:you@example.com", "icon": "mail", "display": "you@example.com" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/your-profile", "icon": "linkedin", "display": "in/your-profile" },
+    { "label": "GitHub", "url": "https://github.com/your-username", "icon": "github", "display": "your-username" }
+  ],
+  "education": [
+    {
+      "qualification": "BSc Computer Science",
+      "institution": "Example University",
+      "location": "City",
+      "start": "2016",
+      "end": "2019",
+      "highlights": [ "A highlight", "Another highlight" ]
+    }
+  ],
+  "skillGroups": [
+    { "category": "Languages", "skills": [ { "name": "C#", "icon": "csharp" }, { "name": "SQL" } ] },
+    { "category": "Cloud & DevOps", "skills": [ { "name": "Azure", "icon": "azure" }, { "name": "GitHub Actions", "icon": "githubactions" } ] }
+  ],
+  "experience": [
+    {
+      "title": "Software Developer",
+      "company": "Example Ltd",
+      "companyUrl": null,
+      "location": "City (Hybrid)",
+      "start": "2022-03",
+      "end": null,
+      "description": "One sentence about the role.",
+      "achievements": [ "Achievement one", "Achievement two", "Achievement three" ],
+      "technologies": [ "C#", "Blazor", "Azure" ]
+    }
+  ],
+  "about": {
+    "paragraphs": [ "Paragraph one.", "Paragraph two." ],
+    "interests": [ "Interest one", "Interest two" ],
+    "callToAction": {
+      "heading": "Let's connect",
+      "text": "I'm always happy to talk about new projects and ideas.",
+      "primaryUrl": "mailto:you@example.com",
+      "primaryLabel": "Email me"
+    }
+  },
+  "footer": {
+    "copyrightName": null,
+    "showBuiltWith": true
+  }
+}

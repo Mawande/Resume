@@ -5,6 +5,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+        <!-- Smaller download: skips culture data. Dates are formatted in English. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- Workaround for dotnet/sdk#54309 (dotnet watch on macOS). Remove once fixed. -->
+    <IntermediateOutputPath>obj/$(Configuration)/</IntermediateOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

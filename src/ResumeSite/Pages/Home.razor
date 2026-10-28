@@ -1,7 +1,79 @@
 ﻿@page "/"
+@inject ResumeService Resumes
+@inject PageScrollService Scroll
+@inject IWebAssemblyHostEnvironment Env
 
-<PageTitle>Home</PageTitle>
+@if (loadError is not null)
+{
+    <section class="page-section" role="alert">
+        <div class="container">
+            <h1>Something went wrong</h1>
+            <p class="lead">The page content couldn't be loaded. Please try refreshing.</p>
+            @if (Env.IsDevelopment())
+            {
+                <p>Check <code>wwwroot/data/resume.json</code>:</p>
+                <pre class="error-details">@loadError</pre>
+            }
+        </div>
+    </section>
+}
+else if (resume is null)
+{
+    <section class="page-section">
+        <p class="container" role="status">Loading…</p>
+    </section>
+}
+else
+{
+    <PageTitle>@resume.Profile.Name – @resume.Profile.Title</PageTitle>
 
-<h1>Hello, world!</h1>
+    <section id="introduction" class="page-section" tabindex="-1" aria-labelledby="introduction-heading" style="min-height: 100vh">
+        <div class="container reveal">
+            <h1 id="introduction-heading">@resume.Profile.Name</h1>
+            <p class="lead">@resume.Profile.Title</p>
+            <p>Placeholder: introduction and education come in part 2.</p>
+        </div>
+    </section>
 
-Welcome to your new app.
+    <section id="experience" class="page-section page-section--alt" tabindex="-1" aria-labelledby="experience-heading" style="min-height: 100vh">
+        <div class="container reveal">
+            <h2 id="experience-heading">Skills &amp; experience</h2>
+            <p>Placeholder: skills and work experience come in part 2.</p>
+        </div>
+    </section>
+
+    <section id="about" class="page-section" tabindex="-1" aria-labelledby="about-heading" style="min-height: 60vh">
+        <div class="container reveal">
+            <h2 id="about-heading">About me</h2>
+            <p>Placeholder: about me comes in part 2.</p>
+        </div>
+    </section>
+}
+
+@code {
+    private Resume? resume;
+    private string? loadError;
+    private bool scrollInitialized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            resume = await Resumes.GetAsync();
+        }
+        catch (Exception ex)
+        {
+            loadError = ex.Message;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // The sections only exist once the data has loaded, so start scroll tracking then.
+        if (resume is not null && !scrollInitialized)
+        {
+            scrollInitialized = true;
+            await Scroll.InitializeAsync();
+        }
+    }
+}

@@ -1,0 +1,179 @@
+/* Transparent at the top of the page; frosted glass once scrolled (data-scrolled is set by site.js). */
+.site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: var(--header-height);
+    background-color: transparent;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.site-header[data-scrolled] {
+    background-color: color-mix(in srgb, var(--bg) var(--header-tint), transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+/* Browsers without blur support get a more opaque tint so the links stay readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header[data-scrolled] {
+        background-color: color-mix(in srgb, var(--bg) 94%, transparent);
+    }
+}
+
+.header-inner {
+    height: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.brand {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand:hover {
+    color: var(--accent);
+}
+
+.section-links {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.section-links a {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.5rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+/* Accent underline that grows in on hover and stays on the active section. */
+.section-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15rem;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+}
+
+.section-links a:hover {
+    color: var(--text);
+}
+
+.section-links a.is-active {
+    color: var(--accent);
+}
+
+.section-links a:hover::after,
+.section-links a.is-active::after {
+    transform: scaleX(1);
+}
+
+.menu-toggle {
+    display: none;
+}
+
+/* Phones: links fold into a menu button in the same bar. */
+@media (max-width: 47.99rem) {
+    .menu-toggle {
+        display: inline-grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        margin-right: -0.5rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+    }
+
+    .menu-icon,
+    .menu-icon::before,
+    .menu-icon::after {
+        display: block;
+        width: 1.25rem;
+        height: 2px;
+        border-radius: 1px;
+        background: currentColor;
+        transition: transform 0.25s ease, background-color 0.2s ease;
+    }
+
+    .menu-icon {
+        position: relative;
+    }
+
+    .menu-icon::before,
+    .menu-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+    }
+
+    .menu-icon::before { top: -6px; }
+    .menu-icon::after { top: 6px; }
+
+    .menu-toggle[aria-expanded="true"] .menu-icon { background: transparent; }
+    .menu-toggle[aria-expanded="true"] .menu-icon::before { transform: translateY(6px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] .menu-icon::after { transform: translateY(-6px) rotate(-45deg); }
+
+    .section-links {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.25rem);
+        left: var(--gutter);
+        right: var(--gutter);
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background-color: color-mix(in srgb, var(--surface) 92%, transparent);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+        box-shadow: var(--shadow);
+    }
+
+    .section-links.is-open {
+        display: flex;
+    }
+
+    .section-links a {
+        display: block;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .section-links a::after {
+        display: none;
+    }
+
+    .section-links a.is-active {
+        background: var(--accent-soft);
+    }
+}

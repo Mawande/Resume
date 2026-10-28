@@ -1,3 +1,16 @@
 ﻿@inherits LayoutComponentBase
+@inject PageScrollService Scroll
 
-@Body
+<a class="skip-link" href="#main" @onclick="SkipToContentAsync" @onclick:preventDefault>Skip to content</a>
+
+<SiteHeader />
+
+<main id="main" tabindex="-1">
+    @Body
+</main>
+
+<SiteFooter />
+
+@code {
+    private Task SkipToContentAsync() => Scroll.ScrollToAsync("main", updateHash: false);
+}

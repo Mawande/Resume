@@ -1,0 +1,49 @@
+@inject ResumeService Resumes
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <p>
+            &copy; @DateTime.Now.Year @copyrightName
+            @if (showBuiltWith)
+            {
+                <span class="built-with"> · Built with Blazor WebAssembly</span>
+            }
+        </p>
+
+        @if (contacts.Count > 0)
+        {
+            <ul class="footer-links">
+                @foreach (var link in contacts)
+                {
+                    <li>
+                        <a href="@link.Url"
+                           target="@(link.IsExternal ? "_blank" : null)"
+                           rel="@(link.IsExternal ? "noopener noreferrer" : null)">
+                            @link.Label
+                            @if (link.IsExternal)
+                            {
+                                <span class="visually-hidden"> (opens in a new tab)</span>
+                            }
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</footer>
+
+@code {
+    private string? copyrightName;
+    private bool showBuiltWith;
+    private IReadOnlyList<ContactLink> contacts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resume = await Resumes.TryGetAsync();
+        if (resume is null) return;
+
+        copyrightName = resume.Footer?.CopyrightName ?? resume.Profile.Name;
+        showBuiltWith = resume.Footer?.ShowBuiltWith ?? false;
+        contacts = resume.Contacts;
+    }
+}

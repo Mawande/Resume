@@ -1,0 +1,76 @@
+@implements IDisposable
+@inject ResumeService Resumes
+@inject PageScrollService Scroll
+@inject NavigationManager Nav
+
+<header id="site-header" class="site-header" @onkeydown="OnKeyDown">
+    <div class="header-inner">
+        <a class="brand" href="#@FirstSectionId"
+           @onclick="() => GoToAsync(FirstSectionId)" @onclick:preventDefault>@name</a>
+
+        <nav aria-label="Page sections">
+            <button type="button" class="menu-toggle"
+                    aria-expanded="@(menuOpen ? "true" : "false")"
+                    aria-controls="section-links"
+                    @onclick="ToggleMenu">
+                <span class="menu-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">@(menuOpen ? "Close menu" : "Open menu")</span>
+            </button>
+
+            <ul id="section-links" class="section-links @(menuOpen ? "is-open" : null)">
+                @foreach (var section in PageSections.All)
+                {
+                    var isActive = section.Id == Scroll.ActiveSectionId;
+                    <li>
+                        <a href="#@section.Id"
+                           class="@(isActive ? "is-active" : null)"
+                           aria-current="@(isActive ? "location" : null)"
+                           @onclick="() => GoToAsync(section.Id)"
+                           @onclick:preventDefault>@section.Label</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</header>
+
+@code {
+    private static string FirstSectionId => PageSections.All[0].Id;
+
+    private string? name;
+    private bool menuOpen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Scroll.ActiveSectionChanged += OnActiveSectionChanged;
+        name = (await Resumes.TryGetAsync())?.Profile.Name;
+    }
+
+    private void ToggleMenu() => menuOpen = !menuOpen;
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") menuOpen = false;
+    }
+
+    private async Task GoToAsync(string sectionId)
+    {
+        menuOpen = false;
+
+        if (IsOnHomePage())
+            await Scroll.ScrollToAsync(sectionId);
+        else
+            Nav.NavigateTo($"/#{sectionId}"); // e.g. from the 404 page
+    }
+
+    private bool IsOnHomePage()
+    {
+        var path = Nav.ToBaseRelativePath(Nav.Uri);
+        var cut = path.IndexOfAny(['?', '#']);
+        return (cut >= 0 ? path[..cut] : path).Length == 0;
+    }
+
+    private void OnActiveSectionChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Scroll.ActiveSectionChanged -= OnActiveSectionChanged;
+}
